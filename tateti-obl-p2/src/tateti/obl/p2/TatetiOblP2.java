@@ -19,7 +19,8 @@ public class TatetiOblP2 {
     public static void main(String[] args) throws Exception {
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8.name()));
         
-        Interfaz interfaz = new Interfaz();
+        Sistema sistema = new Sistema();
+        Interfaz interfaz = new Interfaz(sistema);
         boolean ejecutar = true;
         
         while (ejecutar) {
