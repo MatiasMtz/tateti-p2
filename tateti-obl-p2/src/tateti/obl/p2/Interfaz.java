@@ -15,7 +15,7 @@ public class Interfaz {
     
     public boolean iniciar() {
         menuPrincipal();  
-        int seleccion = validarInput(5);
+        int seleccion = leerInput(5);
         
         switch (seleccion) {
             case 1:
@@ -79,7 +79,7 @@ public class Interfaz {
      * @param rango - (int) Rango máximo de selección (1|---|rango).
      * @return - (int) opción seleccionada.
      */
-    public int validarInput(int rango) {
+    private int leerInput(int rango) {
         int seleccion;
         while(true) {
             System.out.println("Seleccione una opción [1-" + rango + "]: ");
