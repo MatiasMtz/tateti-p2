@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package tateti.obl.p2;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -12,8 +14,9 @@ public class TatetiOblP2 {
 
     /**
      * @param args the command line arguments
+     * @throws java.lang.Exception
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8.name()));
         
         Interfaz interfaz = new Interfaz();
