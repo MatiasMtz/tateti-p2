@@ -27,6 +27,6 @@ public class TatetiOblP2 {
             ejecutar = interfaz.iniciar();
         }
         
-        System.out.println("Programa finalizado. Hasta luego.");
+        System.out.println("Medio Tateti finalizado. Hasta luego.");
     }
 }

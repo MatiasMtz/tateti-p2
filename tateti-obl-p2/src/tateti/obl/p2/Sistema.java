@@ -22,15 +22,46 @@ public class Sistema {
         jugadores.add(jugador);
         return true;
     }
-    
-    public ArrayList<Jugador> getJugadores() {
-        // ordenar lista de jugadores alfabeticamente
+     
+    public ArrayList<Jugador> getRankingOInvictos(int modo) {
+        ArrayList<Jugador> copiaJugadores = new ArrayList<>(jugadores);
+        switch (modo) {
+            case 1:
+                // Ordena a los jugadores por partidas ganadas descendente.
+                for (int i = 0; i < copiaJugadores.size(); i++) {
+                    for (int j = i + 1; j < copiaJugadores.size(); j++) {
+                        if (copiaJugadores.get(i).getPartidasGanadas() < copiaJugadores.get(j).getPartidasGanadas()) {
+                            Jugador aux = copiaJugadores.get(i);
+                            copiaJugadores.set(i, copiaJugadores.get(j));
+                            copiaJugadores.set(j, aux);
+                        }
+                    }
+                } 
+                break;
+            case 2:
+                // Elimina jugadores que perdieron alguna partida y ordena al resto alfabeticamente.
+                for (int i = 0; i < copiaJugadores.size(); i++) {
+                    if (copiaJugadores.get(i).getPartidasPerdidas() > 0) {
+                        copiaJugadores.remove(i);
+                    }
+                }
+                copiaJugadores = ordenarJugadores(copiaJugadores);
+                break;
+        }        
+        return copiaJugadores;
     }
     
-    public ArrayList<Jugador> getRankingEInvictos(int modo) {
-        // mediante la var modo cambia el funcionamiento del metodo. Tiene que devolver:
-        // 1. el ranking de los jugadores ordenados decreciente por cantidad de partidas ganadas
-        // 2. mostrar los jugadores invictos, que nunca jugaron y, o, nunca perdieron, ordenados alfabéticamente (usar getJugadores).
-        ArrayList<Jugador> rankingeInvictos = new ArrayList<>(jugadores); // copia del arr principal para que otras clases no accedan
+     public ArrayList<Jugador> ordenarJugadores(ArrayList<Jugador> copiaJugadores) {
+        // ordenar lista de jugadores alfabeticamente
+        for (int i = 0; i < copiaJugadores.size(); i++) {
+            for (int j = i + 1; j < copiaJugadores.size(); j++) {
+                if (copiaJugadores.get(i).getNombre().compareToIgnoreCase(copiaJugadores.get(j).getNombre()) > 0) {
+                    Jugador aux = copiaJugadores.get(i);
+                    copiaJugadores.set(i, copiaJugadores.get(j));
+                    copiaJugadores.set(j, aux);
+                }
+            }
+        }
+        return copiaJugadores;
     }
 }

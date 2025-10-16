@@ -37,16 +37,39 @@ public class Jugador {
         this.edad = edad;
     }
     
-    public void registrarPartida(String resultado) {
+    public int getPartidasJugadas() {
+        return this.partidasJugadas;
+    }
+    public void sumarPartidaJugada() {
         this.partidasJugadas++;
-        if (resultado.equals("victoria")) {
-            this.partidasGanadas++;
-        } else if (resultado.equals("empate")) {
-            this.partidasEmpatadas++;
-        }
+    }
+    
+    public int getPartidasGanadas() {
+        return this.partidasGanadas;
+    }
+    public void sumarPartidaGanada() {
+        this.partidasGanadas++;
+    }
+    
+    public int getPartidasEmpatadas() {
+        return this.partidasEmpatadas;
+    }
+    public void sumarPartidaEmpatada() {
+        this.partidasEmpatadas++;
     }
     
     public int getPartidasPerdidas() {
         return this.partidasJugadas - (this.partidasGanadas + this.partidasEmpatadas);
     }
+    
+    public void registrarPartida(String resultado) {
+        sumarPartidaJugada();
+        if (resultado.equals("victoria")) {
+            sumarPartidaGanada();
+        } else if (resultado.equals("empate")) {
+            sumarPartidaEmpatada();
+        }
+    }
+    
+
 }
