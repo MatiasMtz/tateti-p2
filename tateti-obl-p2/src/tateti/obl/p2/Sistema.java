@@ -14,13 +14,22 @@ public class Sistema {
     
     public boolean crearJugador(String nombre, int edad) {
         for (Jugador j : jugadores) {
-            if (j.getNombre().equals(nombre)) {
+            if (j.getNombre().toLowerCase().equals(nombre.toLowerCase())) {
                 return false;
             }
         }
         Jugador jugador = new Jugador(nombre, edad);
         jugadores.add(jugador);
         return true;
+    }
+    
+    public boolean existeJugador(String nombre) {
+        for (Jugador j : jugadores) {
+            if (j.getNombre().toLowerCase().equals(nombre.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
     }
      
     public ArrayList<Jugador> getRankingOInvictos(int modo) {
@@ -51,7 +60,7 @@ public class Sistema {
         return copiaJugadores;
     }
     
-     public ArrayList<Jugador> ordenarJugadores(ArrayList<Jugador> copiaJugadores) {
+    public ArrayList<Jugador> ordenarJugadores(ArrayList<Jugador> copiaJugadores) {
         // ordenar lista de jugadores alfabeticamente
         for (int i = 0; i < copiaJugadores.size(); i++) {
             for (int j = i + 1; j < copiaJugadores.size(); j++) {
@@ -63,5 +72,10 @@ public class Sistema {
             }
         }
         return copiaJugadores;
+    }
+    
+    public ArrayList<Jugador> ordenarJugadores() {
+        ArrayList<Jugador> copiaJugadores = new ArrayList<>(jugadores);
+        return ordenarJugadores(copiaJugadores);
     }
 }

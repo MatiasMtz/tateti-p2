@@ -71,5 +71,8 @@ public class Jugador {
         }
     }
     
-
+    @Override
+    public String toString() {
+        return this.nombre + " - edad: " + this.edad;
+    }
 }

@@ -37,7 +37,7 @@ public class Interfaz {
                 mostrarRanking();
                 break;
             case 5:
-                System.out.println("Saliendo del programa...");
+                System.out.println("### Saliendo del programa...");
                 return false;
         }
         return true;
@@ -45,14 +45,11 @@ public class Interfaz {
     }
     
     public void menuPrincipal() {
-        String matias = "Matías Martínez: 282558";
-        String franco = "Franco Trenche: 368637";
-        
-        System.out.println("Trabajo desarrollado por: " + matias + " - " + franco);
-        System.out.println();
-        System.out.println("******************************");
+        System.out.println("\n========================================================================");
+        System.out.println("Trabajo desarrollado por: Matías Martínez 282558 y Franco Trenche 368637");
+        System.out.println("\n******************************");
         System.out.println("------=[MENÚ PRINCIPAL]=------");
-        System.out.println("********************");
+        System.out.println("******************************");
         System.out.println("1) Registrar un jugador");
         System.out.println("2) Comienzo de partida común");
         System.out.println("3) Continuación de partida");
@@ -60,55 +57,73 @@ public class Interfaz {
         System.out.println("******************************");
         System.out.println("5) Terminar el programa");
         System.out.println("******************************");
-        System.out.println();
     }
     
     public void registrarJugador() {
-        System.out.println("*********************************");
+        System.out.println("\n*********************************");
         System.out.println("------=[REGISTRAR JUGADOR]=------");
         System.out.println("*********************************");
-        boolean creado = false;
         
-        while (!creado) {
-            System.out.println(">>> Ingrese el nombre del jugador (o presione ENTER para volver al menú principal): ");
-            String nombre = scanner.nextLine().trim();
-            
+        String nombre;
+        while (true) {
+            System.out.print("\n>>> Ingrese el nombre del jugador (o presione ENTER para volver al menú principal): ");
+            nombre = scanner.nextLine().trim();
+                       
             if (nombre.isEmpty()) {
-                System.out.println(">>> Volviendo al menú principal...");
+                System.out.println("### Volviendo al menú principal...");
                 return;
             }
             
-            System.out.println(">>> Ingrese la edad del jugador: ");
-            int edad;
+            if (sistema.existeJugador(nombre)) {
+                System.out.println("!!! El jugador [[ " + nombre + " ]] ya existe. Intente con otro nombre.");
+                continue;
+            }
+            break;
+        }
+        
+        int edad;
+        while (true) {
+            System.out.print("\n>>> Ingrese la edad del jugador: ");
             try {
                 edad = Integer.parseInt(scanner.nextLine());
                 if (edad <= 0) {
-                    System.out.println(">>> La edad debe ser un número positivo.");
+                    System.out.println("!!! La edad debe ser un número positivo.");
                     continue;
                 }
+                break;
             } catch (NumberFormatException e) {
-                System.out.println(">>> Ingrese un número válido para la edad.");
-                continue;
+                System.out.println("!!! Ingrese un número válido para la edad.");
             }
+        }
             
-            creado = sistema.crearJugador(nombre, edad);
-            if (creado) {
-                System.out.println(">>> El jugador " + nombre + " ha sido creado correctamente.");
-                System.out.println(">>> Presione ENTER para volver al menú principal...");
-                scanner.nextLine(); // Esperar la confirmacion del usuario para volver al menu principal.
-            } else {
-                System.out.println(">>> El jugador " + nombre + " ya existe. Intente con otro nombre.");
-            }
+        boolean creado = sistema.crearJugador(nombre, edad);
+        if (creado) {
+            System.out.println("\n+++ El jugador [[ " + nombre + " ]] ha sido creado correctamente.");
+            System.out.println("### Presione ENTER para volver al menú principal...");
+            scanner.nextLine(); // Esperar la confirmacion del usuario para volver al menu principal.
+            return;
+        } else {
+            System.out.println("!!! Error inesperado: no se pudo crear el jugador. Intente nuevamente.");
         }
     }
     
     public void comenzarPartidaComun() {
-        System.out.println("COMENZAR PARTIDA...");
-        // mostrar lista numerada de jugadores
+        ArrayList<Jugador> jugadoresSeleccionados = seleccionarJugador();
+        if (jugadoresSeleccionados.size() != 2) {
+            System.out.println("!!! Ha ocurrido un error en la selección de jugadores. Vuelva a intentarlo.");
+            return;
+        }
+        // crear instancia de Partida con ambos jugadores. 
+        
+        System.out.println("JUGADORES SELECCIONADOS: " + jugadoresSeleccionados.get(0).getNombre() + " - " + jugadoresSeleccionados.get(1).getNombre());
     }
     
     public void continuarPartida() {
-        System.out.println("MENU PARA CONTINUAR PARTIDA");
+        ArrayList<Jugador> jugadoresSeleccionados = seleccionarJugador();
+        if (jugadoresSeleccionados.size() != 2) {
+            System.out.println("!!! Ha ocurrido un error en la selección de jugadores. Vuelva a intentarlo.");
+            return;
+        }
     }
     
     public void mostrarRanking() {
@@ -123,14 +138,16 @@ public class Interfaz {
                 System.out.println("************************************");
                 System.out.println("------=[RANKING DE VICTORIAS]=------");
                 System.out.println("************************************");
+                System.out.println("POSICIÓN> NOMBRE DE JUGADOR - VICTORIAS");
             } else {
                 System.out.println("**********************************");
                 System.out.println("------=[JUGADORES INVICTOS]=------");
                 System.out.println("**********************************");
+                System.out.println("POSICIÓN> NOMBRE DE JUGADOR");
             }
             
             if (jugadores.isEmpty()) {
-                System.out.println(">>> No hay jugadores registrados en el sistema.");
+                System.out.println("!!! No hay jugadores registrados en el sistema.");
             } else {
                 int i = 1;
                 for (Jugador j : jugadores) {
@@ -150,25 +167,21 @@ public class Interfaz {
                 }
             }
             
-            System.out.println();
-            System.out.println("1) Ver ranking de jugadores");
+            System.out.println("\n****************************************");
+            System.out.println("1) Ver ranking de jugadores por victorias");
             System.out.println("2) Ver jugadores invictos");
+            System.out.println("*****************************************");
             System.out.println("3) Volver al menú principal");
+            System.out.println("*****************************************");
             
             int seleccion = leerInput(3);
             scanner.nextLine();
 
-            switch (seleccion) {
-                case 1:
-                    modo = 1;
-                    break;
-                case 2:
-                    modo = 2;
-                    break;
-                case 3:
-                    System.out.println(">>> Volviendo al menú principal...");
-                    return;
+            if (seleccion == 3) {
+                System.out.println(">>> Volviendo al menú principal...");
+                return;
             }
+            modo = seleccion;
             System.out.println();
         }
     }
@@ -182,15 +195,62 @@ public class Interfaz {
     private int leerInput(int rango) {
         int seleccion;
         while(true) {
-            System.out.println("Seleccione una opción [1-" + rango + "]: ");
+            System.out.print("\n>>> Seleccione una opción [1-" + rango + "]: ");
             if (scanner.hasNextInt()) {
                 seleccion = scanner.nextInt();
                 if (seleccion >= 1 && seleccion <= rango) break;
             } else {
                 scanner.nextLine();
             }
-            System.out.println(">>> Opcion inválida. Intente nuevamente.");
+            System.out.println("!!! Opcion inválida. Intente nuevamente.");
         }
         return seleccion;
+    }
+    
+    private void mostrarJugadores(ArrayList<Jugador> jugadores) {
+        for (int i = 0; i < jugadores.size(); i++) {
+            System.out.println((i + 1) + "> " + jugadores.get(i).getNombre());
+        }
+    }
+    
+    private void tituloSeleccionJugador() {
+        System.out.println("\n**************************************");
+        System.out.println("------=[SELECCIÓN DE JUGADORES]=------");
+        System.out.println("**************************************");
+    }
+    
+    private ArrayList<Jugador> seleccionarJugador() {
+        tituloSeleccionJugador();
+        
+        ArrayList<Jugador> jugadores = sistema.ordenarJugadores();
+        ArrayList<Jugador> jugadoresSeleccionados = new ArrayList<>();
+        
+        if (jugadores.size() < 2) {
+            System.out.println("!!! Deben crearse al menos 2 jugadores para jugar.");
+            System.out.println(">>> Presione ENTER para volver al menú principal...");
+            scanner.nextLine();
+            return jugadoresSeleccionados;
+        }
+        
+        mostrarJugadores(jugadores);
+        System.out.println();
+        System.out.println(">>> Seleccione al jugador BLANCO (○)");
+        int seleccionBlanco = leerInput(jugadores.size());
+        scanner.nextLine();
+        jugadoresSeleccionados.add(jugadores.get(seleccionBlanco - 1)); 
+        
+        ArrayList<Jugador> jugadoresRestantes = new ArrayList<>(jugadores);
+        jugadoresRestantes.remove(seleccionBlanco - 1);
+
+        tituloSeleccionJugador();
+        mostrarJugadores(jugadoresRestantes);
+        System.out.println();
+        System.out.println(">>> Seleccione al jugador NEGRO (●)");
+        int seleccionNegro = leerInput(jugadoresRestantes.size());
+        scanner.nextLine();
+        jugadoresSeleccionados.add(jugadores.get(seleccionNegro - 1)); 
+        System.out.println();
+
+        return jugadoresSeleccionados;
     }
 }
