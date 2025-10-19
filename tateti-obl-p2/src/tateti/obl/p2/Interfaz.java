@@ -113,6 +113,11 @@ public class Interfaz {
             System.out.println("!!! Ha ocurrido un error en la selección de jugadores. Vuelva a intentarlo.");
             return;
         }
+        
+        Partida partida = new Partida(jugadoresSeleccionados.get(0), jugadoresSeleccionados.get(1));
+        partida.getTablero().mostrarTablero(partida.isMostrarBordes());
+        
+        
         // crear instancia de Partida con ambos jugadores. 
         
         System.out.println("JUGADORES SELECCIONADOS: " + jugadoresSeleccionados.get(0).getNombre() + " - " + jugadoresSeleccionados.get(1).getNombre());
@@ -124,6 +129,10 @@ public class Interfaz {
             System.out.println("!!! Ha ocurrido un error en la selección de jugadores. Vuelva a intentarlo.");
             return;
         }
+        String[] movimientos;
+        
+        // pedir movimientos y transformarlos en arr        
+        Partida partida = new Partida(jugadoresSeleccionados.get(0), jugadoresSeleccionados.get(1), movimientos);
     }
     
     public void mostrarRanking() {
