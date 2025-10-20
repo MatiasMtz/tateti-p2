@@ -115,12 +115,61 @@ public class Interfaz {
         }
         
         Partida partida = new Partida(jugadoresSeleccionados.get(0), jugadoresSeleccionados.get(1));
-        partida.getTablero().mostrarTablero(partida.isMostrarBordes());
+        System.out.println("### Comienza la partida!");
+        partida.getTablero().mostrarTablero();
         
-        
-        // crear instancia de Partida con ambos jugadores. 
-        
-        System.out.println("JUGADORES SELECCIONADOS: " + jugadoresSeleccionados.get(0).getNombre() + " - " + jugadoresSeleccionados.get(1).getNombre());
+        while (partida.esPartidaActiva()) {
+            System.out.print("\n>>> Turno de [[ " + partida.getJugadorActual().getNombre() + " ]]: ");
+            String movimiento = leerInputMovimiento(partida);
+            
+            switch (movimiento.toUpperCase()) {
+                case "X":
+                    System.out.println("### " + partida.getJugadorActual().getNombre() + " se ha rendido. Fin de la partida.");
+                    partida.terminarPartida();
+                    break;
+                case "B":
+                    partida.mostrarBordes(true);
+                    partida.getTablero().mostrarTablero();
+                    break;
+                case "N":
+                    partida.mostrarBordes(false);
+                    partida.getTablero().mostrarTablero();
+                    break;
+                case "T":
+                    if (confirmarEmpate()) {
+                        System.out.println("Partida finalizada en empate.");
+                        partida.terminarPartida();
+                    }
+                    break;
+                case "H":
+                    String jugadaGanadora = partida.getJugadaGanadora();
+                    if (jugadaGanadora != null) {
+                        System.out.println(">>> Jugada ganadora: " + jugadaGanadora);
+                    } else {
+                        System.out.println("No hay jugada ganadora disponible.");
+                    }
+                    break;
+                default:
+                    // validar formato de input
+                    if (partida.esJugadaValida(movimiento)) {
+                        partida.realizarMovimiento(movimiento);
+                        partida.getTablero().mostrarTablero();
+                        
+                        if (partida.hayGanador()) {
+                            System.out.println("### " + partida.getGanador().getNombre() + "ha ganado la partida.");
+                            partida.terminarPartida();
+                        } else if (partida.esEmpate()) {
+                            System.out.println("### Partida finalizada en empate.");
+                            partida.terminarPartida();
+                        } else {
+                            partida.cambiarTurno();
+                        }
+                    } else {
+                        System.out.println("!!! Movimiento inválido, intente nuevamente.");
+                    }
+                    break;
+            }
+        }
     }
     
     public void continuarPartida() {
@@ -129,7 +178,7 @@ public class Interfaz {
             System.out.println("!!! Ha ocurrido un error en la selección de jugadores. Vuelva a intentarlo.");
             return;
         }
-        String[] movimientos;
+        String[] movimientos = new String[2];
         
         // pedir movimientos y transformarlos en arr        
         Partida partida = new Partida(jugadoresSeleccionados.get(0), jugadoresSeleccionados.get(1), movimientos);
@@ -203,7 +252,7 @@ public class Interfaz {
      */
     private int leerInput(int rango) {
         int seleccion;
-        while(true) {
+        while (true) {
             System.out.print("\n>>> Seleccione una opción [1-" + rango + "]: ");
             if (scanner.hasNextInt()) {
                 seleccion = scanner.nextInt();
@@ -214,6 +263,17 @@ public class Interfaz {
             System.out.println("!!! Opcion inválida. Intente nuevamente.");
         }
         return seleccion;
+    }
+    private String leerInputMovimiento(Partida partida) {
+        System.out.print(">>> Ingrese su jugada: ");
+        String movimiento = scanner.nextLine().trim().toUpperCase();
+        
+        while (!partida.esJugadaValida(movimiento)) {
+            System.out.print("!!! Movimiento inválido, intente nuevamente: ");
+            movimiento = scanner.nextLine().trim().toUpperCase();
+        }
+        
+        return movimiento;
     }
     
     private void mostrarJugadores(ArrayList<Jugador> jugadores) {
@@ -261,5 +321,11 @@ public class Interfaz {
         System.out.println();
 
         return jugadoresSeleccionados;
+    }
+    
+    private boolean confirmarEmpate() {
+        System.out.print(">>> ¿Terminar partida en empate? (S/N): ");
+        String respuesta = scanner.nextLine().trim().toUpperCase();
+        return respuesta.equals("S");
     }
 }
