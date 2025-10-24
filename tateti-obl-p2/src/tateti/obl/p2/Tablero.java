@@ -75,20 +75,19 @@ public class Tablero {
     }
 
     private void mostrarSinBordes() {
-        System.out.println("\n+--+--+--+--+--+--+");
+        System.out.println("\n  +--+--+--+--+--+--+");
         for (int i = 0; i < 3; i++) {
-            char fila = (char) ('A' + i);
-            System.out.print("   |");
+            System.out.print(" " + " |");
             for (int j = 0; j < 6; j++) System.out.print(getCeldaParte(celdas[i][j], 1) + "|");
             System.out.println();
 
-            System.out.print(" " + fila + " |");
+            System.out.print(" " + " |");
             for (int j = 0; j < 6; j++) System.out.print(getCeldaParte(celdas[i][j], 2) + "|");
             System.out.println();
 
-            System.out.print("   |");
+            System.out.print(" " + " |");
             for (int j = 0; j < 6; j++) System.out.print(getCeldaParte(celdas[i][j], 3) + "|");
-            System.out.println("\n+--+--+--+--+--+--+");
+            System.out.println("\n  +--+--+--+--+--+--+");
         }
     }
 
@@ -116,7 +115,16 @@ public class Tablero {
     // Lógica del juego
     // ============================
     public void colocarFicha(String movimiento, boolean turnoBlanco) {
-        // TODO: implementar lógica de jugada
+        int largo = movimiento.length();
+        if (largo != 3) return;
+        
+        char[] coordenadas = movimiento.toCharArray();
+        
+        char fila = coordenadas[0];
+        int col = coordenadas[1] - 1;
+        char pos = coordenadas[2];
+        
+        infoCelda = celdas[fila][col];
     }
 
     public boolean esJugadaValida(String movimiento, boolean esTurnoBlanco) {
