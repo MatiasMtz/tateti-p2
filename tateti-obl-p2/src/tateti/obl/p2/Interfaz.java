@@ -156,8 +156,9 @@ public class Interfaz {
                         partida.getTablero().mostrarTablero();
                         
                         if (partida.hayGanador()) {
-                            System.out.println("### " + partida.getGanador().getNombre() + "ha ganado la partida.");
+                            System.out.println("### " + partida.getGanador().getNombre() + " ha ganado la partida.");
                             partida.terminarPartida();
+                            partida.getTablero().mostrarFinal(partida.getGanador() == partida.getJugadorBlanco());
                         } else if (partida.esEmpate()) {
                             System.out.println("### Partida finalizada en empate.");
                             partida.terminarPartida();
