@@ -112,7 +112,7 @@ public class Partida {
     public void terminarPartida() {
         // Agregar limpieza y metodos necesarios cuando se termina la partida.
         this.partidaActiva = false;
-        System.out.println("La partida ha finalizado.");
+        System.out.println("La partida ha finalizado con esta jugada:");
     }
     
     public boolean esPartidaActiva() {
