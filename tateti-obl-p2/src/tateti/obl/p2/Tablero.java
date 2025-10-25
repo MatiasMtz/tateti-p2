@@ -110,6 +110,11 @@ public class Tablero {
 
         return "  ";
     }
+    
+    public static int mapaAbca012(char c) {
+        int idx = Character.toUpperCase(c) - 'A';
+        return (idx >= 0 && idx <= 2) ? idx : -1;
+    }
 
     // ============================
     // Lógica del juego
@@ -120,11 +125,38 @@ public class Tablero {
         
         char[] coordenadas = movimiento.toCharArray();
         
-        char fila = coordenadas[0];
-        int col = coordenadas[1] - 1;
-        char pos = coordenadas[2];
+        int fila = this.mapaAbca012(coordenadas[0]);
+        int col = coordenadas[1] - '1';
+        char accion = Character.toUpperCase(coordenadas[2]);
         
-        infoCelda = celdas[fila][col];
+        if (fila < 0 || fila > 2 || col > 5 || (accion != 'C' && accion != 'D')) return;
+        
+        Celda celda = celdas[fila][col];
+        String valorCelda = celda.getValor();
+        
+        if (accion == 'I') {
+            if (!valorCelda.isEmpty()) {
+                String colorCelda = celda.getColor();
+                String colorEsperado = turnoBlanco ? "blanco" : "negro";
+                
+                if(colorCelda.equalsIgnoreCase(colorEsperado)) {
+                    if (valorCelda.equals("C"))
+                        celda.setValor("D");
+                    else if (valorCelda.equals("D"))
+                        celda.setValor("C");
+                }
+                
+            }
+            return;
+        }
+        
+        if (accion == 'D' || accion == 'C') {
+            if (celda.getValor().isEmpty()) {
+                celda.setValor(String.valueOf(accion));
+                celda.setColor(turnoBlanco ? "blanco" : "negro");
+            }
+        }
+        
     }
 
     public boolean esJugadaValida(String movimiento, boolean esTurnoBlanco) {

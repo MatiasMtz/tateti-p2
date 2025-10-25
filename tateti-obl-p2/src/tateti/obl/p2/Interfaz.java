@@ -317,7 +317,7 @@ public class Interfaz {
         System.out.println(">>> Seleccione al jugador NEGRO (●)");
         int seleccionNegro = leerInput(jugadoresRestantes.size());
         scanner.nextLine();
-        jugadoresSeleccionados.add(jugadores.get(seleccionNegro - 1)); 
+        jugadoresSeleccionados.add(jugadoresRestantes.get(seleccionNegro - 1)); 
         System.out.println();
 
         return jugadoresSeleccionados;

@@ -90,7 +90,8 @@ public class Partida {
     }
     
     public String getJugadaGanadora() {
-        return tablero.getJugadaGanadora();
+        //return tablero.getJugadaGanadora();
+        return "";
     }
 
     public Jugador getGanador() {
