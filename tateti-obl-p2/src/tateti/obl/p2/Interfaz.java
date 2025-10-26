@@ -124,7 +124,9 @@ public class Interfaz {
             
             switch (movimiento.toUpperCase()) {
                 case "X":
-                    System.out.println("### " + partida.getJugadorActual().getNombre() + " se ha rendido. Fin de la partida.");
+                    System.out.println();
+                    System.out.println("¡¡¡ EL JUGADOR " + partida.getJugadorActual().getNombre() + " SE HA RENDIDO!!! FIN DE LA PARTIDA..");
+                    partida.actualizarRanking(partida.getJugadorBlanco(), partida.getJugadorNegro(), partida.getJugadorActualOponente());
                     partida.terminarPartida();
                     break;
                 case "B":
@@ -156,14 +158,20 @@ public class Interfaz {
                         partida.getTablero().mostrarTablero();
                         
                         if (partida.hayGanador()) {
-                            System.out.println("### " + partida.getGanador().getNombre() + " ha ganado la partida.");
-                            
+                            System.out.println();
+                            System.out.println("EL JUGADOR -> " + partida.getGanador().getNombre() + " <- HA GANADO LA PARTIDA!");
                             partida.terminarPartida();
+                            System.out.println("Jugada ganadora:");
                             partida.getTablero().mostrarFinal(partida.getGanador() == partida.getJugadorBlanco());
                             partida.actualizarRanking(partida.getJugadorBlanco(), partida.getJugadorNegro(), partida.getGanador());
+                            System.out.println("\n### Presione ENTER para volver al menú principal...");
+                            scanner.nextLine();
                         } else if (partida.esEmpate()) {
                             System.out.println("### Partida finalizada en empate.");
                             partida.terminarPartida();
+                            partida.actualizarRanking(partida.getJugadorBlanco(), partida.getJugadorNegro(), null);
+                            System.out.println("\n### Presione ENTER para volver al menú principal...");
+                            scanner.nextLine();
                         } else {
                             partida.cambiarTurno();
                         }
@@ -268,7 +276,7 @@ public class Interfaz {
         return seleccion;
     }
     private String leerInputMovimiento(Partida partida) {
-        System.out.print(">>> Ingrese su jugada: ");
+        System.out.print(">>> Ingrese su jugada: \n");
         String movimiento = scanner.nextLine().trim().toUpperCase();
         
         while (!partida.esJugadaValida(movimiento)) {
