@@ -142,7 +142,7 @@ public class Interfaz {
                     }
                     break;
                 case "H":
-                    String jugadaGanadora = partida.getJugadaGanadora();
+                    String jugadaGanadora = partida.getJugadaGanadora(partida.esTurnoBlanco());
                     if (jugadaGanadora != null) {
                         System.out.println(">>> Jugada ganadora: " + jugadaGanadora);
                     } else {
@@ -157,8 +157,10 @@ public class Interfaz {
                         
                         if (partida.hayGanador()) {
                             System.out.println("### " + partida.getGanador().getNombre() + " ha ganado la partida.");
+                            
                             partida.terminarPartida();
                             partida.getTablero().mostrarFinal(partida.getGanador() == partida.getJugadorBlanco());
+                            partida.actualizarRanking(partida.getJugadorBlanco(), partida.getJugadorNegro(), partida.getGanador());
                         } else if (partida.esEmpate()) {
                             System.out.println("### Partida finalizada en empate.");
                             partida.terminarPartida();
