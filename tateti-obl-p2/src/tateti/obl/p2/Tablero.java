@@ -39,9 +39,6 @@ public class Tablero {
         return celdas;
     }
 
-    // ============================
-    // Mostrar tablero
-    // ============================
     public void setMostrarBordes(boolean mostrarBordes) {
         this.mostrarBordes = mostrarBordes;
     }
@@ -156,9 +153,6 @@ public class Tablero {
         return (idx >= 0 && idx <= 2) ? idx : -1;
     }
 
-    // ============================
-    // Lógica del juego
-    // ============================
     public void colocarFicha(String movimiento, boolean turnoBlanco) {
         int largo = movimiento.length();
         if (largo != 3) return;
@@ -258,10 +252,8 @@ public class Tablero {
         return false;
     }
 
-    // ============================
-    // Detección de ganador
-    // ============================
     public char hayGanador() {
+        //Detección de ganador
         char[][] letras = traducirTablero();
 
         // --- Horizontales ---
@@ -307,23 +299,23 @@ public class Tablero {
           celdasGanadoras[2][4] = true; celdasGanadoras[2][5] = true;
           return letras[0][2];
       }
-      if (mismo(letras[0][5], letras[1][4], letras[2][3])) {
+      if (mismo(letras[0][4], letras[1][3], letras[2][2])) {
           celdasGanadoras[0][5] = true; celdasGanadoras[0][4] = true;
           celdasGanadoras[1][4] = true; celdasGanadoras[1][3] = true;
           celdasGanadoras[2][3] = true; celdasGanadoras[2][2] = true;
-          return letras[0][5];
-      }
-      if (mismo(letras[0][4], letras[1][3], letras[2][2])) {
-          celdasGanadoras[0][4] = true; celdasGanadoras[0][3] = true;
-          celdasGanadoras[1][3] = true; celdasGanadoras[1][2] = true;
-          celdasGanadoras[2][2] = true; celdasGanadoras[2][1] = true;
           return letras[0][4];
       }
       if (mismo(letras[0][3], letras[1][2], letras[2][1])) {
+          celdasGanadoras[0][4] = true; celdasGanadoras[0][3] = true;
+          celdasGanadoras[1][3] = true; celdasGanadoras[1][2] = true;
+          celdasGanadoras[2][2] = true; celdasGanadoras[2][1] = true;
+          return letras[0][3];
+      }
+      if (mismo(letras[0][2], letras[1][1], letras[2][0])) {
           celdasGanadoras[0][3] = true; celdasGanadoras[0][2] = true;
           celdasGanadoras[1][2] = true; celdasGanadoras[1][1] = true;
           celdasGanadoras[2][1] = true; celdasGanadoras[2][0] = true;
-          return letras[0][3];
+          return letras[0][2];
       }
 
         return ' '; // sin ganador
@@ -345,11 +337,9 @@ public class Tablero {
         }
         return true;
     }
-
-    // ============================
-    // Traducción de celdas a letras
-    // ============================
+    
     public char[][] traducirTablero() {
+        // Traducción de celdas a letras
         char[][] letras = new char[3][6];
 
         for (int i = 0; i < 3; i++) {
@@ -358,13 +348,143 @@ public class Tablero {
                 String v2 = celdas[i][j + 1].getValor();
 
                 char letra = ' ';
+                if (v1 != "")
+                    letra = v1.charAt(0);
+
                 if (v1.equals("C") && v2.equals("D")) letra = 'O';
                 else if (v1.equals("D") && v2.equals("C")) letra = 'X';
 
                 letras[i][j] = letra;
             }
-            letras[i][5] = ' ';
+            if (celdas[i][5].getValor() == "")
+                letras[i][5] = ' ';
+            else
+                letras[i][5] = celdas[i][5].getValor().charAt(0);
         }
         return letras;
+    }
+
+    public String hayJugadaGanadora(boolean turnoBlanco) {
+        char letraBuscada = turnoBlanco ? 'O' : 'X';
+        char[][] letras = traducirTablero();
+
+        // --- Horizontales ---
+        for (int i = 0; i < 3; i++) {
+            String jugada = verificarLineaGanadora(i, 0, i, 2, i, 4, letraBuscada, letras);
+            if (jugada != null) return jugada;
+        }
+
+        // --- Verticales ---
+        for (int j = 0; j < 6; j++) {
+            String jugada = verificarLineaGanadora(0, j, 1, j, 2, j, letraBuscada, letras);
+            if (jugada != null) return jugada;
+        }
+
+        // --- Diagonales ---
+        String jugada = verificarLineaGanadora(0, 0, 1, 1, 2, 2, letraBuscada, letras);
+        if (jugada != null) return jugada;
+
+        jugada = verificarLineaGanadora(0, 1, 1, 2, 2, 3, letraBuscada, letras);
+        if (jugada != null) return jugada;
+
+        jugada = verificarLineaGanadora(0, 2, 1, 3, 2, 4, letraBuscada, letras);
+        if (jugada != null) return jugada;
+
+        jugada = verificarLineaGanadora(0, 4, 1, 3, 2, 2, letraBuscada, letras);
+        if (jugada != null) return jugada;
+
+        jugada = verificarLineaGanadora(0, 3, 1, 2, 2, 1, letraBuscada, letras);
+        if (jugada != null) return jugada;
+
+        jugada = verificarLineaGanadora(0, 2, 1, 1, 2, 0, letraBuscada, letras);
+        if (jugada != null) return jugada;
+
+        return null;
+    }
+
+    private String verificarLineaGanadora(int i1, int j1, int i2, int j2, int i3, int j3, char letraBuscada, char[][] letras) {
+        int coincidencias = 0;
+        int filaFaltante = -1, colFaltante = -1;
+
+        // Contar coincidencias y encontrar la posición faltante
+        if (letras[i1][j1] == letraBuscada) {
+            coincidencias++;
+        } else {
+            filaFaltante = i1;
+            colFaltante = j1;
+        }
+
+        if (letras[i2][j2] == letraBuscada) {
+            coincidencias++;
+        } else {
+            filaFaltante = i2;
+            colFaltante = j2;
+        }
+
+        if (letras[i3][j3] == letraBuscada) {
+            coincidencias++;
+        } else {
+            filaFaltante = i3;
+            colFaltante = j3;
+        }
+
+        // Si hay exactamente 2 coincidencias, verificar la posición faltante
+        if (coincidencias == 2) {
+            return calcularJugadaGanadora(filaFaltante, colFaltante, letraBuscada);
+        }
+
+        return null;
+    }
+
+    private String calcularJugadaGanadora(int i, int j, char letraBuscada) {
+        // Verificar si es posible hacer una jugada en esta posición
+        String v1 = celdas[i][j].getValor();
+        String v2 = (j < 5) ? celdas[i][j + 1].getValor() : "";
+
+        // Si la posición está completamente vacía, no es posible
+        if (v1.isEmpty() && v2.isEmpty()) {
+            return null;
+        }
+
+        char fila = (char) ('A' + i);
+        char columna = (char) ('1' + j);
+
+        if (letraBuscada == 'O') {
+            // Buscamos completar 'O' (C+D)
+            if (v2.equals("D") && v1.isEmpty()) {
+                // Poner "C" en celdas[i][j]
+                return "" + fila + columna + "C";
+            } else if (v2.equals("D") && v1.equals("D")) {
+                // Invertir celdas[i][j]
+                return "" + fila + columna + "I";
+            } else if (v1.equals("C") && v2.isEmpty()) {
+                // Poner "D" en celdas[i][j+1]
+                char columnaSiguiente = (char) ('1' + j + 1);
+                return "" + fila + columnaSiguiente + "D";
+            } else if (v1.equals("C") && v2.equals("C")) {
+                // Invertir celdas[i][j+1]
+                char columnaSiguiente = (char) ('1' + j + 1);
+                return "" + fila + columnaSiguiente + "I";
+            }
+        } else {
+            // Buscamos completar 'X' (D+C)
+            if (v2.equals("C") && v1.isEmpty()) {
+                // Poner "D" en celdas[i][j]
+                return "" + fila + columna + "D";
+            } else if (v2.equals("C") && v1.equals("C")) {
+                // Invertir celdas[i][j]
+                return "" + fila + columna + "I";
+            } else if (v1.equals("D") && v2.isEmpty()) {
+                // Poner "C" en celdas[i][j+1]
+                char columnaSiguiente = (char) ('1' + j + 1);
+                return "" + fila + columnaSiguiente + "C";
+            } else if (v1.equals("D") && v2.equals("D")) {
+                // Invertir celdas[i][j+1]
+                char columnaSiguiente = (char) ('1' + j + 1);
+                return "" + fila + columnaSiguiente + "I";
+            }
+        }
+
+        return null;
     }
 }
