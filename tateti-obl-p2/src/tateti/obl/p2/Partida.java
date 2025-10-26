@@ -48,6 +48,10 @@ public class Partida {
         return this.jugadorActual;
     }
     
+    public Jugador getJugadorActualOponente() {
+        return (jugadorActual == jugadorBlanco) ? jugadorNegro : jugadorBlanco;
+    }
+    
     public Tablero getTablero() {
         return this.tablero;
     }
@@ -111,7 +115,7 @@ public class Partida {
     public void terminarPartida() {
         // Agregar limpieza y metodos necesarios cuando se termina la partida.
         this.partidaActiva = false;
-        System.out.println("La partida ha finalizado con esta jugada:");
+        System.out.println();
     }
     
     public boolean esPartidaActiva() {
