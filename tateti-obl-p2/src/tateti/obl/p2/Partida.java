@@ -89,9 +89,8 @@ public class Partida {
         return false;
     }
     
-    public String getJugadaGanadora() {
-        //return tablero.getJugadaGanadora();
-        return "";
+    public String getJugadaGanadora(boolean turnoBlanco) {
+        return tablero.hayJugadaGanadora(turnoBlanco);
     }
 
     public Jugador getGanador() {
@@ -118,4 +117,17 @@ public class Partida {
     public boolean esPartidaActiva() {
         return partidaActiva;
     }
+
+    public void actualizarRanking(Jugador jugador1, Jugador jugador2, Jugador ganador) {
+        jugador1.sumarPartidaJugada();
+        jugador2.sumarPartidaJugada();
+
+        if (ganador != null) {
+            ganador.sumarPartidaGanada();
+        } else {
+            jugador1.sumarPartidaEmpatada();
+            jugador2.sumarPartidaEmpatada();
+        }
+    }
+    
 }
