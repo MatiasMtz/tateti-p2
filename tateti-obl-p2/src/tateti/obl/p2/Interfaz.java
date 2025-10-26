@@ -47,7 +47,9 @@ public class Interfaz {
     public void menuPrincipal() {
         System.out.println("\n========================================================================");
         System.out.println("Trabajo desarrollado por: Matías Martínez 282558 y Franco Trenche 368637");
-        System.out.println("\n******************************");
+        System.out.println("========================================================================");
+        System.out.println();
+        System.out.println("******************************");
         System.out.println("------=[MENÚ PRINCIPAL]=------");
         System.out.println("******************************");
         System.out.println("1) Registrar un jugador");
@@ -113,18 +115,24 @@ public class Interfaz {
             System.out.println("!!! Ha ocurrido un error en la selección de jugadores. Vuelva a intentarlo.");
             return;
         }
-        
+
         Partida partida = new Partida(jugadoresSeleccionados.get(0), jugadoresSeleccionados.get(1));
         System.out.println("### Comienza la partida!");
+        jugarPartida(partida);
+    }
+
+    private void jugarPartida(Partida partida) {
         partida.getTablero().mostrarTablero();
-        
+
         while (partida.esPartidaActiva()) {
             System.out.print("\n>>> Turno de [[ " + partida.getJugadorActual().getNombre() + " ]]: ");
             String movimiento = leerInputMovimiento(partida);
             
             switch (movimiento.toUpperCase()) {
                 case "X":
-                    System.out.println("### " + partida.getJugadorActual().getNombre() + " se ha rendido. Fin de la partida.");
+                    System.out.println();
+                    System.out.println("¡¡¡ EL JUGADOR " + partida.getJugadorActual().getNombre() + " SE HA RENDIDO!!! FIN DE LA PARTIDA..");
+                    partida.actualizarRanking(partida.getJugadorBlanco(), partida.getJugadorNegro(), partida.getJugadorActualOponente());
                     partida.terminarPartida();
                     break;
                 case "B":
@@ -142,7 +150,7 @@ public class Interfaz {
                     }
                     break;
                 case "H":
-                    String jugadaGanadora = partida.getJugadaGanadora();
+                    String jugadaGanadora = partida.getJugadaGanadora(partida.esTurnoBlanco());
                     if (jugadaGanadora != null) {
                         System.out.println(">>> Jugada ganadora: " + jugadaGanadora);
                     } else {
@@ -156,11 +164,20 @@ public class Interfaz {
                         partida.getTablero().mostrarTablero();
                         
                         if (partida.hayGanador()) {
-                            System.out.println("### " + partida.getGanador().getNombre() + "ha ganado la partida.");
+                            System.out.println();
+                            System.out.println("EL JUGADOR -> " + partida.getGanador().getNombre() + " <- HA GANADO LA PARTIDA!");
                             partida.terminarPartida();
+                            System.out.println("Jugada ganadora:");
+                            partida.getTablero().mostrarFinal(partida.getGanador() == partida.getJugadorBlanco());
+                            partida.actualizarRanking(partida.getJugadorBlanco(), partida.getJugadorNegro(), partida.getGanador());
+                            System.out.println("\n### Presione ENTER para volver al menú principal...");
+                            scanner.nextLine();
                         } else if (partida.esEmpate()) {
                             System.out.println("### Partida finalizada en empate.");
                             partida.terminarPartida();
+                            partida.actualizarRanking(partida.getJugadorBlanco(), partida.getJugadorNegro(), null);
+                            System.out.println("\n### Presione ENTER para volver al menú principal...");
+                            scanner.nextLine();
                         } else {
                             partida.cambiarTurno();
                         }
@@ -178,10 +195,15 @@ public class Interfaz {
             System.out.println("!!! Ha ocurrido un error en la selección de jugadores. Vuelva a intentarlo.");
             return;
         }
-        String[] movimientos = new String[2];
-        
-        // pedir movimientos y transformarlos en arr        
+        System.out.println("Ingrese las jugadas para continuar la partida; ej: 'A1C C2D B2C'");
+        String movimientos = scanner.nextLine();
+
         Partida partida = new Partida(jugadoresSeleccionados.get(0), jugadoresSeleccionados.get(1), movimientos);
+        partida.continuarPartida();
+
+        System.out.println();
+        System.out.println("    Continuando la partida!");
+        jugarPartida(partida);
     }
     
     public void mostrarRanking() {
@@ -265,7 +287,7 @@ public class Interfaz {
         return seleccion;
     }
     private String leerInputMovimiento(Partida partida) {
-        System.out.print(">>> Ingrese su jugada: ");
+        System.out.print(">>> Ingrese su jugada: \n");
         String movimiento = scanner.nextLine().trim().toUpperCase();
         
         while (!partida.esJugadaValida(movimiento)) {
@@ -317,7 +339,7 @@ public class Interfaz {
         System.out.println(">>> Seleccione al jugador NEGRO (●)");
         int seleccionNegro = leerInput(jugadoresRestantes.size());
         scanner.nextLine();
-        jugadoresSeleccionados.add(jugadores.get(seleccionNegro - 1)); 
+        jugadoresSeleccionados.add(jugadoresRestantes.get(seleccionNegro - 1)); 
         System.out.println();
 
         return jugadoresSeleccionados;

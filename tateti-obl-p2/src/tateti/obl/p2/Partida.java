@@ -16,9 +16,11 @@ public class Partida {
     private Tablero tablero;
     private boolean turnoBlanco;
     private boolean partidaActiva = true;
+    private String[] movimientos;
+       
     
-    // Constructor para nuevas partidas    
     public Partida(Jugador jugadorBlanco, Jugador jugadorNegro) {
+        // Constructor para nuevas partidas
         this.jugadorBlanco = jugadorBlanco;
         this.jugadorNegro = jugadorNegro;
         this.jugadorActual = jugadorBlanco;
@@ -26,11 +28,13 @@ public class Partida {
         this.turnoBlanco = true;
     }
     
-    public Partida(Jugador jugadorBlanco, Jugador jugadorNegro, String[] movimientos) {
+    public Partida(Jugador jugadorBlanco, Jugador jugadorNegro, String movimientos) {
+        // Constructor para continuar partidas
         this.jugadorBlanco = jugadorBlanco;
         this.jugadorNegro = jugadorNegro;
         this.tablero = new Tablero(true);
-        this.turnoBlanco = (movimientos.length %2 == 0); // movimientos pares - turno de blanco
+        this.movimientos = movimientos.trim().split(" ");
+        this.turnoBlanco = this.movimientos.length %2 == 0;
         if (turnoBlanco) {
             this.jugadorActual = jugadorBlanco;
         } else {
@@ -46,6 +50,10 @@ public class Partida {
     }
     public Jugador getJugadorActual() {
         return this.jugadorActual;
+    }
+    
+    public Jugador getJugadorActualOponente() {
+        return (jugadorActual == jugadorBlanco) ? jugadorNegro : jugadorBlanco;
     }
     
     public Tablero getTablero() {
@@ -89,8 +97,8 @@ public class Partida {
         return false;
     }
     
-    public String getJugadaGanadora() {
-        return tablero.getJugadaGanadora();
+    public String getJugadaGanadora(boolean turnoBlanco) {
+        return tablero.hayJugadaGanadora(turnoBlanco);
     }
 
     public Jugador getGanador() {
@@ -111,10 +119,32 @@ public class Partida {
     public void terminarPartida() {
         // Agregar limpieza y metodos necesarios cuando se termina la partida.
         this.partidaActiva = false;
-        System.out.println("La partida ha finalizado.");
+        System.out.println();
     }
     
     public boolean esPartidaActiva() {
         return partidaActiva;
     }
+
+    public void actualizarRanking(Jugador jugador1, Jugador jugador2, Jugador ganador) {
+        jugador1.sumarPartidaJugada();
+        jugador2.sumarPartidaJugada();
+
+        if (ganador != null) {
+            ganador.sumarPartidaGanada();
+        } else {
+            jugador1.sumarPartidaEmpatada();
+            jugador2.sumarPartidaEmpatada();
+        }
+    }
+    
+    public void continuarPartida() {
+        for (int m = 0; m < this.movimientos.length; m++) {
+            if (this.esJugadaValida(this.movimientos[m])) {
+                this.realizarMovimiento(this.movimientos[m]);
+                this.cambiarTurno();
+            }
+        }
+    }
+    
 }
