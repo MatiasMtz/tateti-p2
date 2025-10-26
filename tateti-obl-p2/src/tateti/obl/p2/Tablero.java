@@ -163,8 +163,8 @@ public class Tablero {
 
         int fila = filaChar - 'A';
         int col = colChar - '1';
-        
-        if (fila < 0 || fila > 2 || col > 5 || (accion != 'C' && accion != 'D')) return;
+
+        if (fila < 0 || fila > 2 || col > 5 || (accion != 'C' && accion != 'D' && accion != 'I')) return;
         
         Celda celda = celdas[fila][col];
         String valorCelda = celda.getValor();
