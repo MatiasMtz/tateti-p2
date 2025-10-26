@@ -11,28 +11,13 @@ public class Tablero {
         
     }
 
-    public Tablero(boolean mostrarBordes, String movimientos) {
-        this.mostrarBordes = mostrarBordes;
-        inicializarCeldas();
-        aplicarMovimientos(movimientos);
-    }
-
-    // ============================
-    // Inicialización
-    // ============================
+    
     private void inicializarCeldas() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 6; j++) {
                 celdas[i][j] = new Celda();
             }
         }
-    }
-
-    private void aplicarMovimientos(String movimientos) {
-        if (movimientos.isEmpty()) {
-            System.out.println("No hay movimientos para realizar");
-        }
-        // TODO: implementar luego
     }
 
     public Celda[][] getCeldas() {

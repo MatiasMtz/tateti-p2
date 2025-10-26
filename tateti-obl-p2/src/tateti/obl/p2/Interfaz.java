@@ -47,7 +47,9 @@ public class Interfaz {
     public void menuPrincipal() {
         System.out.println("\n========================================================================");
         System.out.println("Trabajo desarrollado por: Matías Martínez 282558 y Franco Trenche 368637");
-        System.out.println("\n******************************");
+        System.out.println("========================================================================");
+        System.out.println();
+        System.out.println("******************************");
         System.out.println("------=[MENÚ PRINCIPAL]=------");
         System.out.println("******************************");
         System.out.println("1) Registrar un jugador");
@@ -113,11 +115,15 @@ public class Interfaz {
             System.out.println("!!! Ha ocurrido un error en la selección de jugadores. Vuelva a intentarlo.");
             return;
         }
-        
+
         Partida partida = new Partida(jugadoresSeleccionados.get(0), jugadoresSeleccionados.get(1));
         System.out.println("### Comienza la partida!");
+        jugarPartida(partida);
+    }
+
+    private void jugarPartida(Partida partida) {
         partida.getTablero().mostrarTablero();
-        
+
         while (partida.esPartidaActiva()) {
             System.out.print("\n>>> Turno de [[ " + partida.getJugadorActual().getNombre() + " ]]: ");
             String movimiento = leerInputMovimiento(partida);
@@ -189,10 +195,15 @@ public class Interfaz {
             System.out.println("!!! Ha ocurrido un error en la selección de jugadores. Vuelva a intentarlo.");
             return;
         }
-        String[] movimientos = new String[2];
-        
-        // pedir movimientos y transformarlos en arr        
+        System.out.println("Ingrese las jugadas para continuar la partida; ej: 'A1C C2D B2C'");
+        String movimientos = scanner.nextLine();
+
         Partida partida = new Partida(jugadoresSeleccionados.get(0), jugadoresSeleccionados.get(1), movimientos);
+        partida.continuarPartida();
+
+        System.out.println();
+        System.out.println("    Continuando la partida!");
+        jugarPartida(partida);
     }
     
     public void mostrarRanking() {
