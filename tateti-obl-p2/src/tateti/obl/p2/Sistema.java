@@ -49,7 +49,7 @@ public class Sistema {
                 break;
             case 2:
                 // Elimina jugadores que perdieron alguna partida y ordena al resto alfabeticamente.
-                for (int i = 0; i < copiaJugadores.size(); i++) {
+                for (int i = copiaJugadores.size() - 1; i >= 0; i--) {
                     if (copiaJugadores.get(i).getPartidasPerdidas() > 0) {
                         copiaJugadores.remove(i);
                     }
